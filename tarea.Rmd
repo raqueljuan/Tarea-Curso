@@ -1,11 +1,12 @@
 ---
 title: "Tarea de aprovechamiento"
 author: "Raquel Juan Ovejero"
-date: "15/11/2021"
+date: "16/11/2021"
 output:
   pdf_document:
     number_sections: yes
     fig_caption: yes
+
 ---
 
 ```{r setup, include=FALSE}
@@ -15,7 +16,7 @@ knitr::opts_chunk$set(echo = TRUE, results = TRUE,
 
 # Abstract
 
-Climate change projections indicate increases in CO2 emissions and DOC release from peatlands, thereby potentially transforming them from sinks to carbon sources. The individual effects of abiotic and biotic factors on peatland carbon exports and the interactions among all these factors are still poorly understood. Therefore, we conducted a field study over two years in a peatland complex by selecting four habitats differing in their dominant vegetation (shrub, grass, sedge and moss) in order to assess the links between abiotic and biotic factors and carbon release at each habitat. Accounting for the wide variability across habitats allowed us to examine the direct and indirect effects of abiotic and biotic factors on carbon cycling at the ecosystem level (i.e. the whole peatland complex). Results showed that the habitats dominated by vascular plants had the highest microbial and above-ground plant biomass, as well as the highest values of Acari and Collembola biomass, whereas Enchytraeidae biomass was dominant in the moss habitat. Furthermore, at ecosystem level, the SEM explained 75% of the total soil respiration variation and 33% of the DOC variation. Accordingly, soil respiration was directly linked to enchytraeid biomass, with these invertebrates being positively related to soil moisture. In contrast, both soil temperature and soil moisture had direct effects on microbial and Acari biomass, and the interaction between Acari biomass and below-ground plant biomass was responsible for DOC release. These findings provide new insights into the role of soil biota in carbon dynamics in peatlands, by showing that the direct effects of abiotic factors on biotic communities (both plants and soil organisms) determine how much carbon is lost from these systems (either as CO2 e or DOC).
+Climate change projections indicate increases in $CO_{2}$ emissions and DOC release from peatlands, thereby potentially transforming them from sinks to carbon sources. The individual effects of abiotic and biotic factors on peatland carbon exports and the interactions among all these factors are still poorly understood. Therefore, we conducted a field study over two years in a peatland complex by selecting four habitats differing in their dominant vegetation (shrub, grass, sedge and moss) in order to assess the links between abiotic and biotic factors and carbon release at each habitat. Accounting for the wide variability across habitats allowed us to examine the direct and indirect effects of abiotic and biotic factors on carbon cycling at the ecosystem level (i.e. the whole peatland complex). Results showed that the habitats dominated by vascular plants had the highest microbial and above-ground plant biomass, as well as the highest values of Acari and Collembola biomass, whereas Enchytraeidae biomass was dominant in the moss habitat. Furthermore, at ecosystem level, the SEM explained 75% of the total soil respiration variation and 33% of the DOC variation. Accordingly, soil respiration was directly linked to enchytraeid biomass, with these invertebrates being positively related to soil moisture. In contrast, both soil temperature and soil moisture had direct effects on microbial and Acari biomass, and the interaction between Acari biomass and below-ground plant biomass was responsible for DOC release. These findings provide new insights into the role of soil biota in carbon dynamics in peatlands, by showing that the direct effects of abiotic factors on biotic communities (both plants and soil organisms) determine how much carbon is lost from these systems (either as $CO_{2}$ or DOC).
 
 
 # Conceptual diagram
@@ -29,7 +30,7 @@ knitr::include_graphics(here::here("Figure1.jpg"))
 
 # Results
 
-## Soil abiotic factors (mean values)
+## Soil abiotic factors
 
   | Variable                  |Shrub |Grass |Sedge |Moss |
   |---------------------------|------|------|------|-----|
@@ -38,7 +39,7 @@ knitr::include_graphics(here::here("Figure1.jpg"))
   | pH                        |5.94  |6.13  |6.28  |6.06 |
   | C/N ratio                 |19.33 |20.51 |22.12 |19.43|
 
-
+Table: Mean values
 
 ## Ouput of a linear mixed model as an example
 
@@ -56,9 +57,10 @@ type=ifelse(knitr::is_latex_output(),"latex","html"),
 title="Table showing the results of a linear mixed model")
 ```
 
+\newpage
 ## Relationships between abiotic and biotic factors
 
-```` {r fig.width = 10, fig.height = 10, echo = FALSE}
+```` {r fig.width = 10, fig.height = 10, fig.cap = "Principal Component Analysis", echo = FALSE}
 library(readxl)
 library(vegan)
 variables_vtemporal <- read_excel("variables_vtemporal.xlsx")
@@ -92,4 +94,5 @@ with(variables_vtemporal, legend("topright", legend = levels(Sampling), bty = "n
 legend("bottomright", 
        col = c("black","grey","red","green"), lwd=2,
        legend = habitat.names)
+
 ```
