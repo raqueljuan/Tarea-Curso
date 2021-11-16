@@ -1,0 +1,95 @@
+---
+title: "Tarea de aprovechamiento"
+author: "Raquel Juan Ovejero"
+date: "15/11/2021"
+output:
+  pdf_document:
+    number_sections: yes
+    fig_caption: yes
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, results = TRUE, 
+                      warning = FALSE, message = FALSE)
+```
+
+# Abstract
+
+Climate change projections indicate increases in CO2 emissions and DOC release from peatlands, thereby potentially transforming them from sinks to carbon sources. The individual effects of abiotic and biotic factors on peatland carbon exports and the interactions among all these factors are still poorly understood. Therefore, we conducted a field study over two years in a peatland complex by selecting four habitats differing in their dominant vegetation (shrub, grass, sedge and moss) in order to assess the links between abiotic and biotic factors and carbon release at each habitat. Accounting for the wide variability across habitats allowed us to examine the direct and indirect effects of abiotic and biotic factors on carbon cycling at the ecosystem level (i.e. the whole peatland complex). Results showed that the habitats dominated by vascular plants had the highest microbial and above-ground plant biomass, as well as the highest values of Acari and Collembola biomass, whereas Enchytraeidae biomass was dominant in the moss habitat. Furthermore, at ecosystem level, the SEM explained 75% of the total soil respiration variation and 33% of the DOC variation. Accordingly, soil respiration was directly linked to enchytraeid biomass, with these invertebrates being positively related to soil moisture. In contrast, both soil temperature and soil moisture had direct effects on microbial and Acari biomass, and the interaction between Acari biomass and below-ground plant biomass was responsible for DOC release. These findings provide new insights into the role of soil biota in carbon dynamics in peatlands, by showing that the direct effects of abiotic factors on biotic communities (both plants and soil organisms) determine how much carbon is lost from these systems (either as CO2 e or DOC).
+
+
+# Conceptual diagram
+
+```{r diagram, fig.align = 'center', out.width = "100%", fig.cap='Results of piecewise Structural Equation Modelling', echo=FALSE}
+knitr::include_graphics(here::here("Figure1.jpg"))
+```
+
+
+\newpage
+
+# Results
+
+## Soil abiotic factors (mean values)
+
+  | Variable                  |Shrub |Grass |Sedge |Moss |
+  |---------------------------|------|------|------|-----|
+  | Soil temperature (ºC)     |11.24 |9.88  |10.10 |11.96|
+  | Soil moisture content (%) |68.70 |77.03 |82.64 |86.98|
+  | pH                        |5.94  |6.13  |6.28  |6.06 |
+  | C/N ratio                 |19.33 |20.51 |22.12 |19.43|
+
+
+
+## Ouput of a linear mixed model as an example
+
+```{r results='asis'}
+library(readxl)
+library(lme4)
+variables_vtemporal_all <- read_excel("variables_vtemporal_all.xlsx")
+DOC <- lmer(log_DOC ~ Habitat + log_below + (1 | Sampling) , 
+            data = variables_vtemporal_all)
+  
+stargazer::stargazer(DOC, 
+header = FALSE, 
+label = "tab:mixedmodel1", 
+type=ifelse(knitr::is_latex_output(),"latex","html"), 
+title="Table showing the results of a linear mixed model")
+```
+
+## Relationships between abiotic and biotic factors
+
+```` {r fig.width = 10, fig.height = 10, echo = FALSE}
+library(readxl)
+library(vegan)
+variables_vtemporal <- read_excel("variables_vtemporal.xlsx")
+variables_vtemporal[is.na(variables_vtemporal$SoilRespiration), "SoilRespiration"]<-median(variables_vtemporal$SoilRespiration, na.rm=TRUE)
+Response<-variables_vtemporal[,c(3,4,5,6,7,8,9,10,11)]
+pca1<-rda(Response, scale=TRUE)
+
+variables_vtemporal$Sampling=ordered(variables_vtemporal$Sampling,levels=c("January","March","May","July","September","November"))
+variables_vtemporal$Habitat=ordered(variables_vtemporal$Habitat,levels=c("Shrub","Grass","Sedge","Moss"))
+scl <- 3
+colvec <- c("cornflowerblue", "yellowgreen", "orange", "red2", "mediumvioletred", "cadetblue1")
+
+plot(pca1, type="n", scaling=scl)
+
+with(variables_vtemporal, points(pca1, display="sites", col = colvec[Sampling],
+scaling=scl, pch=21, bg=colvec[Sampling]))
+habitat.names <- levels(variables_vtemporal$Habitat)
+sampling.names<-levels(variables_vtemporal$Sampling)
+text(pca1, display = "species", scaling = scl, cex = 1.0, col = "black")
+with(variables_vtemporal, ordiellipse(pca1, Habitat, col="black", show.groups="Shrub", lty=1, lend=1, lwd=2))
+with(variables_vtemporal, ordiellipse(pca1, Habitat, col="grey", show.groups="Grass", lty=1, lend=1, lwd=2))
+with(variables_vtemporal, ordiellipse(pca1, Habitat, col="red", show.groups="Sedge", lty=1, lend=1, lwd=2))
+with(variables_vtemporal, ordiellipse(pca1, Habitat, col="green", show.groups="Moss", lty=1, lwd=2))
+g <- scores(pca1, display = "species")
+len <- 1
+arrows(0, 0, len * g[, 1],  len * g[, 2], length = 0.1, col = "black")
+
+with(variables_vtemporal, legend("topright", legend = levels(Sampling), bty = "n",
+                      col = colvec, pch = 21, pt.bg = colvec))
+
+legend("bottomright", 
+       col = c("black","grey","red","green"), lwd=2,
+       legend = habitat.names)
+```
